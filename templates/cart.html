@@ -31,7 +31,7 @@
         .center-text 
         {
             text-align: center;
-            font-family: Uni Sans; /* Замените на любой другой шрифт, которым хотите заменить */
+            font-family: Uni Sans;
         }
     </style>
 </head>
@@ -88,10 +88,10 @@
                 itemElement.innerHTML = `
                     <div style='width: 350px;' class="card-body">
                         <ul class="list-group">
-                            <li class="list-group-item">id: ${item.id}</li>
-                            <li class="list-group-item">title: ${item.title}</li>
-                            <li class="list-group-item">price: ${item.price}</li>
-                            <li class="list-group-item">quantity: ${item.quantity}</li>
+                            <li class="list-group-item">Номер отеля: ${item.id}</li>
+                            <li class="list-group-item">Отель: ${item.title}</li>
+                            <li class="list-group-item">Цена: ${item.price}</li>
+                            <li class="list-group-item">Количество ночей: ${item.quantity}</li>
                         </ul>
                         <br>
                         <button class="btn btn-danger remove-button" data-index="${index}">Remove</button>
@@ -117,13 +117,13 @@
         .container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 20vh; /* Чтобы центрировать на всей высоте окна */
+            align-items: right;
+            justify-content: right;
+            height: 20vh;
         }
 
         #total-price {
-            text-align: center;
+            text-align: right;
             margin-top: 15px;
         }
     </style>

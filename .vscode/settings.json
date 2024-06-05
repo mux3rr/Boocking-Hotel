@@ -1,0 +1,26 @@
+{
+    "cssPeek.peekFromLanguages": [
+        "html",
+        "laravel-blade",
+        "razor",
+        "vue",
+        "blade",
+        "pug",
+        "jade",
+        "handlebars",
+        "php",
+        "twig",
+        "md",
+        "nunjucks",
+        "javascript",
+        "javascriptreact",
+        "erb",
+        "typescript",
+        "typescriptreact",
+        "HTML (Eex)",
+        "html-eex",
+        "ejs",
+        "hbs",
+        "svelte"
+    ]
+}
