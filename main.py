@@ -1,37 +1,80 @@
-from fastapi import FastAPI, Form, status, HTTPException, Depends, Request, Response
+from fastapi import FastAPI, Form, status, HTTPException, Depends, Request, Response, Query
 from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
-from models import *
+from fastapi.staticfiles import StaticFiles
+from sqlmodel import SQLModel, Session, select
+from models import Hotel, Customer, Cart
 from database import engine
-from sqlmodel import Session, select
-from typing import Annotated
+from typing import Optional, Annotated
 
-app = FastAPI(
-    description='Hotel Servise'
-)
+# Создание таблиц в базе данных
+SQLModel.metadata.create_all(engine)
+
+app = FastAPI(description='Hotel Service')
 
 templates = Jinja2Templates('templates')
 
 session = Session(bind=engine)
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
+@app.get('/', tags=['Pages'])
+async def get_all_hotel(
+    request: Request,
+    title: Optional[str] = Query(None, description="Фильтр по названию отеля"),
+    min_price: Optional[float] = Query(None, description="Минимальная цена"),
+    max_price: Optional[float] = Query(None, description="Максимальная цена")
+):
+    try:
+        statement = select(Hotel)
 
+        if title:
+            statement = statement.where(Hotel.title.contains(title))
+        if min_price is not None:
+            statement = statement.where(Hotel.price >= min_price)
+        if max_price is not None:
+            statement = statement.where(Hotel.price <= max_price)
 
-@app.get('/', response_model=Hotel, tags=['Pages'])
-async def get_all_hotel(request: Request):
-    statement = select(Hotel)
-    result = session.exec(statement).all()
-    
-    if result == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+        result = session.exec(statement).all()
 
-    return templates.TemplateResponse(
-        request = request,
-        name = 'index.html',
-        context = {
-            'result': result
-        }
-    )
+        if not result:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+        return templates.TemplateResponse(
+            'index.html',
+            {'request': request, 'result': result}
+        )
+    except Exception as e:
+        print(f"Error fetching hotels: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+
+@app.post('/cart/add')
+async def add_to_cart(hotel_id: int = Form(...)):
+    try:
+        statement = select(Hotel).where(Hotel.id == hotel_id)
+        hotel = session.exec(statement).first()
+
+        if not hotel:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Hotel not found")
+
+        new_cart_item = Cart(hotel_id=hotel.id)
+        session.add(new_cart_item)
+        session.commit()
+
+        return RedirectResponse('/cart', status_code=302)
+    except Exception as e:
+        print(f"Error adding to cart: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
+
+@app.get('/cart', tags=['Pages'])
+async def get_cart_page(request: Request):
+    try:
+        statement = select(Cart)
+        cart_items = session.exec(statement).all()
+        return templates.TemplateResponse(request=request, name='cart.html', context={'cart_items': cart_items})
+    except Exception as e:
+        print(f"Error fetching cart items: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal Server Error")
 
 @app.get('/hotel/{Hotel_id}', response_model=Hotel, tags=['Pages'])
 async def get_a_hotel(request: Request, Hotel_id: int):
@@ -86,13 +129,6 @@ async def get_profile(request: Request, cust_id: int):
         }
     )
 
-@app.get('/cart', tags=['Pages'])
-async def get_cart_page(request: Request):
-    return templates.TemplateResponse(request=request, name='cart.html')
-
-
-
-
 @app.post('/hotel', response_model=Hotel, status_code=status.HTTP_201_CREATED)
 async def create_a_hotel(hotel: Annotated[Hotel, Depends()]):
     new_hotel = Hotel(id=hotel.id, title=hotel.title, price=hotel.price)
@@ -127,9 +163,6 @@ async def delete_a_hotel(hotel_id: int):
     session.commit()
 
     return result
-
-
-
 
 @app.post('/registration', status_code=status.HTTP_201_CREATED, 
           response_class=RedirectResponse, tags=['Account'])
@@ -196,6 +229,10 @@ async def switch_account(response: Response):
     response = RedirectResponse('/login', status_code=302)
     response.delete_cookie('id')
     return response
+
+# @app.post('/')
+# async def set_hotel_cookie(response: Response, id: int = Form(...), count: int = Form(...)):
+#     return RedirectResponse('/id')
 
 
 
