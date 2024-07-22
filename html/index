@@ -68,64 +68,6 @@
                 <a href="{{ url_for('get_login_page') }}">ПРОФИЛЬ</a>
             </div>
         </div>
-        <br>
-        {% block body %}
-        <div class="row">
-            {% for i in result %}
-            <div class="col-3">
-                <div class="card">
-                    <a href="/hotel/{{ i.id }}">
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <li name="id" class="list-group-item">Номер отеля: {{ i.id }}</li>
-                                <li name="title" class="list-group-item">Отель: {{ i.title }}</li>
-                                <li name="price" class="list-group-item">Цена = ночь: {{ i.price }}</li>
-                            </ul>
-                        </div>
-                    </a>
-                    <div class="d-grid gap-4 col-2 mx-auto">
-                        <input class="form-control" name="number" type="number" min="1" max="4" value="1">
-                        <button class="btn btn-primary buy-button" data-id="{{ i.id }}" data-title="{{ i.title }}"
-                            data-price="{{ i.price }}">Бронь</button>
-                    </div>
-                    <br>
-                </div>
-                <br>
-            </div>
-            {% endfor %}
-        </div>
-        {% endblock %}
-    </div>
-    
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const buyButtons = document.querySelectorAll('.buy-button');
-
-            buyButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const itemId = this.getAttribute('data-id');
-                    const itemTitle = this.getAttribute('data-title');
-                    const itemPrice = this.getAttribute('data-price');
-                    const itemQuantity = this.previousElementSibling.value;
-
-                    addToCart(itemId, itemTitle, itemPrice, itemQuantity);
-                });
-            });
-        });
-
-        function addToCart(id, title, price, quantity) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-            const existingItem = cart.find(item => item.id === id);
-            if (existingItem) {
-                existingItem.quantity = parseInt(existingItem.quantity) + parseInt(quantity);
-            } else {
-                cart.push({ id, title, price, quantity });
-            }
-
-            localStorage.setItem('cart', JSON.stringify(cart));
-        }
 
     </script>
 </body>
