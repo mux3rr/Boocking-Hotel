@@ -94,27 +94,27 @@
     </script>
 </head>
 <body>
-    <h1>Hotels</h1>
+    <h1>Список доступных отелей</h1>
     
-    <!-- Форма для фильтрации -->
+
     <form method="get" action="/" onsubmit="return validateForm()">
         <div>
-            <label for="title">Title:</label>
+            <label for="title">Название:</label>
             <input type="text" id="title" name="title" value="{{ request.query_params.get('title', '') }}">
         </div>
         <div>
-            <label for="min_price">Min Price:</label>
+            <label for="min_price">Минимальная цена:</label>
             <input type="number" id="min_price" name="min_price" value="{{ request.query_params.get('min_price', '') }}">
         </div>
         <div>
-            <label for="max_price">Max Price:</label>
+            <label for="max_price">Максимальная цена:</label>
             <input type="number" id="max_price" name="max_price" value="{{ request.query_params.get('max_price', '') }}">
         </div>
-        <button type="submit">Filter</button>
+        <button type="submit">Фильтр</button>
     </form>
     
     <head>
-        <!-- Другие теги head -->
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ru.min.js"></script>
@@ -123,23 +123,23 @@
     
     
     <body>
-        <!-- Содержимое вашего тела страницы -->
+
         <div id="world-time" style="position: fixed; top: 10px; right: 10px; background: #fff; padding: 10px; border: 1px solid #ccc; z-index: 1000;">
             <span id="time"></span>
         </div>
-        <!-- Другие элементы body -->
+
     </body>
     
     
     <body>
-        <!-- Содержимое вашего тела страницы -->
+
     
         <div id="world-time" style="position: fixed; top: 10px; right: 10px; background: #fff; padding: 10px; border: 1px solid #ccc; z-index: 1000;">
             <span id="time"></span>
         </div>
     
         <script>
-            moment.locale('ru'); // Устанавливаем русский язык по умолчанию
+            moment.locale('ru');
     
             function displayTime() {
                 var now = moment().tz("Europe/Moscow");
@@ -147,15 +147,11 @@
                 document.getElementById('time').innerHTML = timeString;
             }
     
-            displayTime(); // Установить время при загрузке страницы
+            displayTime(); 
         </script>
     </body>
     
-    
-    
 
-    
-    <!-- Список отелей -->
     <div class="hotels-container">
         {% for hotel in result %}
             <div class="hotel-button">
