@@ -1,0 +1,49 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+form div {
+    margin-right: 10px;
+}
+
+.hotels-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hotel-button {
+    display: block;
+    width: 200px;
+    margin: 10px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.hotel-button:hover {
+    background-color: #e0e0e0;
+}
+
+.hotel-button h2 {
+    margin: 0 0 10px;
+}
+
+.hotel-button p {
+    margin: 0;
+}

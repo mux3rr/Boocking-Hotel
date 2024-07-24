@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index</title>
+    <title>index</title>                                                                                                                                                                                                                         
     <link rel="stylesheet" href="../style/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -42,7 +42,7 @@
         .center-text 
         {
             text-align: center;
-            font-family: Uni Sans; /* Замените на любой другой шрифт, которым хотите заменить */
+            font-family: Uni Sans;
         }
 
     </style>
@@ -72,30 +72,13 @@
         {% block body %}
         <div class="row">
             {% for i in result %}
-            <div class="col-3">
-                <div class="card">
-                    <a href="/hotel/{{ i.id }}">
-                        <div class="card-body">
-                            <ul class="list-group">
-                                <li name="id" class="list-group-item">Номер отеля: {{ i.id }}</li>
-                                <li name="title" class="list-group-item">Отель: {{ i.title }}</li>
-                                <li name="price" class="list-group-item">Цена = ночь: {{ i.price }}</li>
-                            </ul>
-                        </div>
-                    </a>
-                    <div class="d-grid gap-4 col-2 mx-auto">
-                        <input class="form-control" name="number" type="number" min="1" max="4" value="1">
-                        <button class="btn btn-primary buy-button" data-id="{{ i.id }}" data-title="{{ i.title }}"
-                            data-price="{{ i.price }}">Бронь</button>
-                    </div>
-                    <br>
-                </div>
-                <br>
+            
             </div>
             {% endfor %}
         </div>
         {% endblock %}
     </div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -129,4 +112,99 @@
     </script>
 </body>
 
+</html>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotels</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <script>
+        function validateForm() {
+            var minPrice = document.getElementById("min_price").value;
+            var maxPrice = document.getElementById("max_price").value;
+            if (minPrice === "") {
+                document.getElementById("min_price").disabled = true;
+            }
+            if (maxPrice === "") {
+                document.getElementById("max_price").disabled = true;
+            }
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Hotels</h1>
+    
+    <!-- Форма для фильтрации -->
+    <form method="get" action="/" onsubmit="return validateForm()">
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="{{ request.query_params.get('title', '') }}">
+        </div>
+        <div>
+            <label for="min_price">Min Price:</label>
+            <input type="number" id="min_price" name="min_price" value="{{ request.query_params.get('min_price', '') }}">
+        </div>
+        <div>
+            <label for="max_price">Max Price:</label>
+            <input type="number" id="max_price" name="max_price" value="{{ request.query_params.get('max_price', '') }}">
+        </div>
+        <button type="submit">Filter</button>
+    </form>
+    
+    <head>
+        <!-- Другие теги head -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ru.min.js"></script>
+    </head>
+    
+    
+    
+    <body>
+        <!-- Содержимое вашего тела страницы -->
+        <div id="world-time" style="position: fixed; top: 10px; right: 10px; background: #fff; padding: 10px; border: 1px solid #ccc; z-index: 1000;">
+            <span id="time"></span>
+        </div>
+        <!-- Другие элементы body -->
+    </body>
+    
+    
+    <body>
+        <!-- Содержимое вашего тела страницы -->
+    
+        <div id="world-time" style="position: fixed; top: 10px; right: 10px; background: #fff; padding: 10px; border: 1px solid #ccc; z-index: 1000;">
+            <span id="time"></span>
+        </div>
+    
+        <script>
+            moment.locale('ru'); // Устанавливаем русский язык по умолчанию
+    
+            function displayTime() {
+                var now = moment().tz("Europe/Moscow");
+                var timeString = now.format('MMMM Do YYYY, h:mm:ss a') + " (Московское время)";
+                document.getElementById('time').innerHTML = timeString;
+            }
+    
+            displayTime(); // Установить время при загрузке страницы
+        </script>
+    </body>
+    
+    
+    <!-- Список отелей -->
+    <div class="hotels-container">
+        {% for hotel in result %}
+            <div class="hotel-button">
+                <h2>{{ hotel.title }}</h2>
+                <p>Цена: {{ hotel.price }}</p>
+                <form method="post" action="/cart/add">
+                    <input type="hidden" name="hotel_id" value="{{ hotel.id }}">
+                    <button type="submit">Бронь</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    
+</body>
 </html>
