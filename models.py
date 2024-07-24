@@ -43,3 +43,7 @@ class Booking(SQLModel, table=True):
                                    default=None)
     phone: int
     address: str
+
+class Cart(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    hotel_id: int
