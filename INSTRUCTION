@@ -1,0 +1,21 @@
+Как локально развернуть и запустить сайт на своем ПК:
+
+$ pip install --upgrade fastapi        Проводит установку или обновление FastAPI
+
+$ fastapi dev main.py                  Непосредственно запускает сервер, на котором октрывается наш сайт
+
+
+ ╭────────── FastAPI CLI - Development mode ───────────╮
+ │                                                     │
+ │  Serving at: http://127.0.0.1:8000                  │
+ │                                                     │
+ │  API docs: http://127.0.0.1:8000/docs               │
+ │                                                     │
+ │  Running in development mode, for production use:   │
+ │                                                     │
+ │  fastapi run                                        │
+ │                                                     │
+ ╰─────────────────────────────────────────────────────╯
+
+
+После этого можно либо открыть API docs Swagger UI, либо сам сервер с сайтом
